@@ -4,11 +4,15 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.List;
+
 import rmi.HotelWorkerRemoteHelper;
+import service.Strategy.ManageHotelStrategy.ManageHotelStrategyService;
+import vo.StrategyVO;
 
 public class HotelWorkerRunner {
 
-	private HotelWorkerRemoteHelper remoteHelper;
+	private  HotelWorkerRemoteHelper remoteHelper;
 	
 	public HotelWorkerRunner(){
 		
@@ -30,10 +34,23 @@ public class HotelWorkerRunner {
 		}
 	}
 	
-
+	public void test (){
+		
+		ManageHotelStrategyService service = remoteHelper.getManageHotelStrategyService();
+		try {
+			List<StrategyVO> volist = service.getAllHotelStrategy("00001");
+			for(StrategyVO vo:volist){
+				System.out.println(vo.getName());
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	public static void main(String args[]){
 		
-		new HotelWorkerRunner();
+		HotelWorkerRunner runner = new HotelWorkerRunner();
+		runner.test();
 	}
 
 

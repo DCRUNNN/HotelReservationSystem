@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 
 import presentation.personnelui.BackgroundPanel;
 import rmi.HotelWorkerRemoteHelper;
+import runner.HotelWorkerRunner;
 import service.Strategy.ManageHotelStrategy.ManageHotelStrategyService;
 import vo.StrategyVO;
 
@@ -21,7 +22,7 @@ public class ManageStrategyUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String hotelID="1";
+	private String hotelID="00001";
 	private JPanel contentPane;
 	private JTable strategyTable;
 	ManageHotelStrategyService strategyHelper;
@@ -48,7 +49,9 @@ public class ManageStrategyUI extends JFrame {
 	 * @throws RemoteException 
 	 */
 	public ManageStrategyUI() throws RemoteException {
-		strategyHelper=HotelWorkerRemoteHelper.getInstance().getManageHotelStrategyService();
+		
+		HotelWorkerRunner runner = new HotelWorkerRunner();
+		ManageHotelStrategyService strategyHelper=HotelWorkerRemoteHelper.getInstance().getManageHotelStrategyService();
 		strategyList=strategyHelper.getAllHotelStrategy(hotelID);
 		
 		init();

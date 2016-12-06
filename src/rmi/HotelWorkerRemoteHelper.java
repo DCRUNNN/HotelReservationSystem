@@ -13,6 +13,7 @@ import service.Strategy.ManageHotelStrategy.ManageHotelStrategyService;
 public class HotelWorkerRemoteHelper {
 
 	private Remote remote;
+	
 	private static HotelWorkerRemoteHelper remoteHelper = new HotelWorkerRemoteHelper();
 	
 	public static HotelWorkerRemoteHelper getInstance (){
