@@ -1,6 +1,7 @@
 package presentation.clientUI_mainui;
 
 import java.awt.Color;
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
@@ -9,8 +10,8 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
+import javafx.scene.control.ComboBox;
 import presentation.clientUI_account.BackgroundPanel;
 
 import javax.swing.ImageIcon;
@@ -18,23 +19,32 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.SystemColor;
-import javax.swing.Icon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class client_mainui extends JFrame
+@SuppressWarnings("serial")
+public class mainUI extends JFrame implements ActionListener
 {
 
 	private JPanel contentPane;
 	private JTextField txtDestination;
 	private JTextField txtCheckInDate;
 	private JTextField txtKeyWord;
-	private JTextField destination;
 	private JTextField checkInDate;
 	private JTextField keyWord;
 	private JTextField txtHotelGrade;
-	private JTextField txtCheckOutDate;
-	private JTextField checkOutDate;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JButton button;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox_1;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox;
 
 	/**
 	 * Launch the application.
@@ -47,7 +57,7 @@ public class client_mainui extends JFrame
 			{
 				try
 				{
-					client_mainui frame = new client_mainui();
+					mainUI frame = new mainUI();
 					frame.setVisible(true);
 				} catch (Exception e)
 				{
@@ -60,7 +70,14 @@ public class client_mainui extends JFrame
 	/**
 	 * Create the frame.
 	 */
-	public client_mainui()
+	
+	public mainUI()
+	{
+		this.initial();
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void initial()
 	{
 		setUndecorated(true);
 		setResizable(false);
@@ -74,9 +91,7 @@ public class client_mainui extends JFrame
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		Image background = new ImageIcon("background.jpg").getImage();
 		Image head = new ImageIcon("client.jpg").getImage();
-		Image txtBackground = new ImageIcon("txtBackground.jpg").getImage();
 		
 		JButton accountButton = new JButton(new ImageIcon("accountButton.jpg"));
 		accountButton.setBounds(70, 400, 170, 60);
@@ -98,7 +113,6 @@ public class client_mainui extends JFrame
 		memberButton.setBounds(70, 680, 170, 60);
 		contentPane.add(memberButton);
 		
-		Image background2 = new ImageIcon("background2.jpg").getImage();
 		Image background3 = new ImageIcon("background3.jpg").getImage();
 		JPanel backgroundPanel = new BackgroundPanel(background3);
 		backgroundPanel.setBounds(0, 0, 1200, 800);
@@ -144,27 +158,20 @@ public class client_mainui extends JFrame
 		txtKeyWord.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
 		backgroundPanel.add(txtKeyWord);
 		
-		destination = new JTextField();
-		destination.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
-		destination.setColumns(10);
-		destination.setBounds(600, 210, 550, 50);
-		destination.setMargin(new Insets(0, 20, 0, 20));
-		backgroundPanel.add(destination);
-		
 		checkInDate = new JTextField();
 		checkInDate.setText("2016/12/02");
 		checkInDate.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
 		checkInDate.setColumns(10);
-		checkInDate.setBounds(600, 290, 175, 50);
-		checkInDate.setMargin(new Insets(0, 20, 0, 20));
+		checkInDate.setBounds(600, 290, 280, 50);
+		checkInDate.setMargin(new Insets(0, 60, 0, 20));
 		backgroundPanel.add(checkInDate);
 		
 		keyWord = new JTextField();
 		keyWord.setForeground(new Color(169, 169, 169));
-		keyWord.setText("£¨Ñ¡Ìî£©¾ÆµêÃû/µØÖ·/ÉÌÈ¦");
+		keyWord.setText("\uFF08\u9009\u586B\uFF09\u9152\u5E97\u540D");
 		keyWord.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
 		keyWord.setColumns(10);
-		keyWord.setBounds(600, 450, 550, 50);
+		keyWord.setBounds(600, 450, 280, 50);
 		keyWord.setMargin(new Insets(0, 20, 0, 20));
 		backgroundPanel.add(keyWord);
 		
@@ -190,37 +197,95 @@ public class client_mainui extends JFrame
 		txtHotelGrade.setBounds(400, 370, 200, 50);
 		backgroundPanel.add(txtHotelGrade);
 		
-		txtCheckOutDate = new JTextField();
-		txtCheckOutDate.setText("ÍË·¿ÈÕÆÚ");
-		txtCheckOutDate.setMargin(new Insets(0, 20, 0, 0));
-		txtCheckOutDate.setForeground(Color.WHITE);
-		txtCheckOutDate.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
-		txtCheckOutDate.setEditable(false);
-		txtCheckOutDate.setColumns(10);
-		txtCheckOutDate.setBackground(SystemColor.activeCaption);
-		txtCheckOutDate.setBounds(775, 290, 200, 50);
-		backgroundPanel.add(txtCheckOutDate);
-		
-		checkOutDate = new JTextField();
-		checkOutDate.setText("2016/12/30");
-		checkOutDate.setMargin(new Insets(0, 20, 0, 20));
-		checkOutDate.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
-		checkOutDate.setColumns(10);
-		checkOutDate.setBounds(975, 290, 175, 50);
-		backgroundPanel.add(checkOutDate);
-		
-		JButton button = new JButton(new ImageIcon("search.jpg"));
-		button.setBounds(950, 558, 200, 60);
+		button = new JButton(new ImageIcon("search.jpg"));
+		button.setBounds(980, 676, 170, 60);
 		backgroundPanel.add(button);
+		button.addActionListener(this);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		comboBox.setBackground(new Color(255, 255, 255));
 		comboBox.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"  \u4E0D\u9650", "  \u4E94\u661F\u7EA7/\u8C6A\u534E", "  \u56DB\u661F\u7EA7/\u9AD8\u6863", "  \u4E09\u661F\u7EA7/\u8212\u9002", "  \u4E8C\u661F\u7EA7\u4EE5\u4E0B/\u7ECF\u6D4E"}));
-		comboBox.setBounds(600, 370, 300, 50);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"        \u4E0D\u9650", "        \u4E94\u661F\u7EA7/\u8C6A\u534E", "        \u56DB\u661F\u7EA7/\u9AD8\u6863", "        \u4E09\u661F\u7EA7/\u8212\u9002", "        \u4E8C\u661F\u7EA7\u4EE5\u4E0B/\u7ECF\u6D4E"}));
+		comboBox.setBounds(600, 370, 280, 50);
 		backgroundPanel.add(comboBox);
 		
-		Image leftbackground = new ImageIcon("leftbackground.jpg").getImage();
+		comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"        \u7701"}));
+		comboBox_1.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		comboBox_1.setBackground(Color.WHITE);
+		comboBox_1.setBounds(600, 210, 140, 50);
+		backgroundPanel.add(comboBox_1);
+		
+		
+		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"        \u5E02"}));
+		comboBox_2.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		comboBox_2.setBackground(Color.WHITE);
+		comboBox_2.setBounds(740, 210, 140, 50);
+		backgroundPanel.add(comboBox_2);
+		
+		JComboBox comboBox_3 = new JComboBox();
+		comboBox_3.setModel(new DefaultComboBoxModel(new String[] {"        \uFF08\u5546\u5708\uFF09"}));
+		comboBox_3.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		comboBox_3.setBackground(Color.WHITE);
+		comboBox_3.setBounds(880, 210, 270, 50);
+		backgroundPanel.add(comboBox_3);
+		
+		textField = new JTextField();
+		textField.setText("\u5173\u952E\u8BCD");
+		textField.setMargin(new Insets(0, 20, 0, 0));
+		textField.setForeground(Color.WHITE);
+		textField.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		textField.setEditable(false);
+		textField.setColumns(10);
+		textField.setBackground(SystemColor.activeCaption);
+		textField.setBounds(400, 530, 200, 50);
+		backgroundPanel.add(textField);
+		
+		textField_1 = new JTextField();
+		textField_1.setText("\uFF08\u9009\u586B\uFF09\u623F\u95F4\u7C7B\u578B");
+		textField_1.setMargin(new Insets(0, 20, 0, 20));
+		textField_1.setForeground(new Color(169, 169, 169));
+		textField_1.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		textField_1.setColumns(10);
+		textField_1.setBounds(600, 530, 280, 50);
+		backgroundPanel.add(textField_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setText("\u5173\u952E\u8BCD");
+		textField_2.setMargin(new Insets(0, 20, 0, 0));
+		textField_2.setForeground(Color.WHITE);
+		textField_2.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		textField_2.setEditable(false);
+		textField_2.setColumns(10);
+		textField_2.setBackground(SystemColor.activeCaption);
+		textField_2.setBounds(402, 610, 200, 50);
+		backgroundPanel.add(textField_2);
+		
+		textField_3 = new JTextField();
+		textField_3.setText("\uFF08\u9009\u586B\uFF09\u623F\u95F4\u6570\u91CF");
+		textField_3.setMargin(new Insets(0, 20, 0, 20));
+		textField_3.setForeground(new Color(169, 169, 169));
+		textField_3.setFont(new Font("·½ÕýÀ¼Í¤³¬Ï¸ºÚ¼òÌå", Font.BOLD, 20));
+		textField_3.setColumns(10);
+		textField_3.setBounds(600, 610, 280, 50);
+		backgroundPanel.add(textField_3);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		
+		if(e.getSource() == button)
+		{
+			String address = (String) comboBox_1.getSelectedItem();
+			String time = checkInDate.getText();
+			String hoteltype = (String) comboBox.getSelectedItem();
+			String keyword1 = keyWord.getText()+textField_1.getText()+textField_3.getText();
+			
+		}
+		// TODO Auto-generated method stub
+		
 	}
 }
 

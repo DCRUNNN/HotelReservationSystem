@@ -1,6 +1,14 @@
 package presentation.clientUI_book;
 
+/*
+ * 
+ * 客户进行预订订单——查看酒店界面原型
+ */
+
 import java.awt.Color;
+
+
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
@@ -9,7 +17,6 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import presentation.clientUI_account.BackgroundPanel;
 
@@ -18,17 +25,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.SystemColor;
-import java.awt.event.ActionListener;
 
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
-import javax.swing.JCheckBox;
-import java.awt.Component;
-import javax.swing.Box;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class client_book extends JFrame
+@SuppressWarnings("serial")
+public class bookUI extends JFrame
 {
 
 	private JPanel contentPane;
@@ -38,15 +41,7 @@ public class client_book extends JFrame
 	private JTextField destination;
 	private JTextField checkInDate;
 	private JTextField txtHotelGrade;
-	private JTextField txtCheckOutDate;
-	private JTextField checkOutDate;
 	private JTextArea textArea;
-	private JLabel txtPrice;
-	private JCheckBox c1;
-	private JCheckBox c2;
-	private JCheckBox c3;
-	private JCheckBox c4;
-	private JCheckBox c5;
 	private JTextArea txtAbc;
 	private JTextArea textField;
 	private JTextArea textField_1;
@@ -54,6 +49,7 @@ public class client_book extends JFrame
 	private JTextArea textField_2;
 	private JButton btnNewButton;
 	private JPanel panel_1;
+	private JTextField textField_3;
 
 	/**
 	 * Launch the application.
@@ -66,7 +62,7 @@ public class client_book extends JFrame
 			{
 				try
 				{
-					client_book frame = new client_book();
+					bookUI frame = new bookUI();
 					frame.setVisible(true);
 				} catch (Exception e)
 				{
@@ -79,7 +75,8 @@ public class client_book extends JFrame
 	/**
 	 * Create the frame.
 	 */
-	public client_book()
+	@SuppressWarnings({ })
+	public bookUI()
 	{
 		setUndecorated(true);
 		setResizable(false);
@@ -93,10 +90,6 @@ public class client_book extends JFrame
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		Image background = new ImageIcon("background.jpg").getImage();
-		Image head = new ImageIcon("client.jpg").getImage();
-		Image txtBackground = new ImageIcon("txtBackground.jpg").getImage();
-		
 		Image background2 = new ImageIcon("background2_1.jpg").getImage();
 		Image background3 = new ImageIcon("background3.jpg").getImage();
 		JPanel backgroundPanel = new BackgroundPanel(background3);
@@ -104,46 +97,47 @@ public class client_book extends JFrame
 		contentPane.add(backgroundPanel);
 		backgroundPanel.setLayout(null);
 		
-		JLabel accountLabel = new JLabel("酒店预订");
+		JLabel accountLabel = new JLabel("搜索条件");
 		accountLabel.setForeground(Color.WHITE);
 		accountLabel.setBounds(71, 90, 202, 50);
 		accountLabel.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 30));
 		backgroundPanel.add(accountLabel);
 		
 		txtDestination = new JTextField();
+		txtDestination.setEditable(false);
 		txtDestination.setForeground(Color.WHITE);
 		txtDestination.setBackground(SystemColor.activeCaption);
 		txtDestination.setText("目的地");
 		txtDestination.setBounds(71, 170, 170, 40);
 		txtDestination.setColumns(10);
 		txtDestination.setMargin(new Insets(0, 20, 0, 0));
-		txtDestination.setEditable(false);
 		txtDestination.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
 		backgroundPanel.add(txtDestination);
 		
 		txtCheckInDate = new JTextField();
+		txtCheckInDate.setEditable(false);
 		txtCheckInDate.setForeground(Color.WHITE);
 		txtCheckInDate.setBackground(SystemColor.activeCaption);
 		txtCheckInDate.setText("入住日期");
 		txtCheckInDate.setColumns(10);
 		txtCheckInDate.setBounds(71, 270, 170, 40);
 		txtCheckInDate.setMargin(new Insets(0, 20, 0, 0));
-		txtCheckInDate.setEditable(false);
 		txtCheckInDate.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
 		backgroundPanel.add(txtCheckInDate);
 		
 		txtKeyWord = new JTextField();
+		txtKeyWord.setEditable(false);
 		txtKeyWord.setForeground(Color.WHITE);
 		txtKeyWord.setBackground(SystemColor.activeCaption);
 		txtKeyWord.setText("关键词");
 		txtKeyWord.setColumns(10);
-		txtKeyWord.setBounds(71, 570, 170, 40);
+		txtKeyWord.setBounds(71, 470, 170, 40);
 		txtKeyWord.setMargin(new Insets(0, 20, 0, 0));
-		txtKeyWord.setEditable(false);
 		txtKeyWord.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
 		backgroundPanel.add(txtKeyWord);
 		
 		destination = new JTextField();
+		destination.setEditable(false);
 		destination.setBackground(new Color(245, 255, 250));
 		destination.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
 		destination.setColumns(10);
@@ -152,6 +146,7 @@ public class client_book extends JFrame
 		backgroundPanel.add(destination);
 		
 		checkInDate = new JTextField();
+		checkInDate.setEditable(false);
 		checkInDate.setBackground(new Color(245, 255, 250));
 		checkInDate.setText("2016/12/02");
 		checkInDate.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
@@ -161,94 +156,25 @@ public class client_book extends JFrame
 		backgroundPanel.add(checkInDate);
 		
 		txtHotelGrade = new JTextField();
+		txtHotelGrade.setEditable(false);
 		txtHotelGrade.setText("酒店级别");
 		txtHotelGrade.setMargin(new Insets(0, 20, 0, 0));
 		txtHotelGrade.setForeground(Color.WHITE);
 		txtHotelGrade.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
-		txtHotelGrade.setEditable(false);
 		txtHotelGrade.setColumns(10);
 		txtHotelGrade.setBackground(SystemColor.activeCaption);
-		txtHotelGrade.setBounds(71, 470, 170, 40);
+		txtHotelGrade.setBounds(71, 370, 170, 40);
 		backgroundPanel.add(txtHotelGrade);
 		
-		txtCheckOutDate = new JTextField();
-		txtCheckOutDate.setText("退房日期");
-		txtCheckOutDate.setMargin(new Insets(0, 20, 0, 0));
-		txtCheckOutDate.setForeground(Color.WHITE);
-		txtCheckOutDate.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
-		txtCheckOutDate.setEditable(false);
-		txtCheckOutDate.setColumns(10);
-		txtCheckOutDate.setBackground(SystemColor.activeCaption);
-		txtCheckOutDate.setBounds(71, 370, 170, 40);
-		backgroundPanel.add(txtCheckOutDate);
-		
-		checkOutDate = new JTextField();
-		checkOutDate.setBackground(new Color(245, 255, 250));
-		checkOutDate.setText("2016/12/30");
-		checkOutDate.setMargin(new Insets(0, 20, 0, 20));
-		checkOutDate.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
-		checkOutDate.setColumns(10);
-		checkOutDate.setBounds(71, 410, 170, 50);
-		backgroundPanel.add(checkOutDate);
-		
-		JButton button = new JButton(new ImageIcon("search.jpg"));
-		button.setBounds(71, 710, 170, 60);
-		backgroundPanel.add(button);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBackground(new Color(245, 255, 250));
-		comboBox.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"  \u4E0D\u9650", "  \u4E94\u661F\u7EA7/\u8C6A\u534E", "  \u56DB\u661F\u7EA7/\u9AD8\u6863", "  \u4E09\u661F\u7EA7/\u8212\u9002", "  \u4E8C\u661F\u7EA7\u4EE5\u4E0B/\u7ECF\u6D4E"}));
-		comboBox.setBounds(71, 510, 170, 50);
-		backgroundPanel.add(comboBox);
-		
 		textArea = new JTextArea();
+		textArea.setEditable(false);
 		textArea.setForeground(new Color(192, 192, 192));
 		textArea.setBackground(new Color(245, 255, 250));
 		textArea.setMargin(new Insets(10, 10, 10, 10));
 		textArea.setLineWrap(true);
-		textArea.setText("（选填）酒店名/地址/商圈");
 		textArea.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
-		textArea.setBounds(71, 610, 170, 90);
+		textArea.setBounds(71, 510, 170, 150);
 		backgroundPanel.add(textArea);
-		
-		txtPrice = new JLabel();
-		txtPrice.setOpaque(false);
-		txtPrice.setText("价格");
-		txtPrice.setForeground(Color.WHITE);
-		txtPrice.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
-		txtPrice.setBounds(413, 69, 52, 50);
-		backgroundPanel.add(txtPrice);
-		
-		c1 = new JCheckBox("\u00A5150\u4EE5\u4E0B");
-		c1.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-		c1.setOpaque(false);
-		c1.setBounds(475, 60, 140, 50);
-		backgroundPanel.add(c1);
-		
-		c2 = new JCheckBox("\u00A5150~300");
-		c2.setOpaque(false);
-		c2.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-		c2.setBounds(609, 60, 140, 50);
-		backgroundPanel.add(c2);
-		
-		c3 = new JCheckBox("\u00A5300~450");
-		c3.setOpaque(false);
-		c3.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-		c3.setBounds(755, 60, 140, 50);
-		backgroundPanel.add(c3);
-		
-		c4 = new JCheckBox("\u00A5450~600");
-		c4.setOpaque(false);
-		c4.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-		c4.setBounds(543, 90, 140, 50);
-		backgroundPanel.add(c4);
-		
-		c5 = new JCheckBox("\u00A5600\u4EE5\u4E0A");
-		c5.setOpaque(false);
-		c5.setFont(new Font("微软雅黑", Font.PLAIN, 20));
-		c5.setBounds(683, 90, 140, 50);
-		backgroundPanel.add(c5);
 		
 		Image hotel = new ImageIcon("hotel.jpg").getImage();
 		JPanel panel = new BackgroundPanel(hotel);
@@ -475,12 +401,54 @@ public class client_book extends JFrame
 		backgroundPanel.add(button_4);
 		
 		JButton button_5 = new JButton(new ImageIcon("return2.jpg"));
-		button_5.setBounds(975, 80, 170, 60);
+		button_5.setBounds(71, 710, 170, 60);
 		backgroundPanel.add(button_5);
 		
-		JCheckBox[] jcb =new JCheckBox[]{c1,c2,c3,c4,c5};
+		JButton button = new JButton(new ImageIcon("price.jpg"));
+		button.setBounds(360, 64, 170, 60);
+		backgroundPanel.add(button);
 		
-		Image leftbackground = new ImageIcon("leftbackground.jpg").getImage();
+		JButton button_6 = new JButton(new ImageIcon("score.jpg"));
+		button_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		button_6.setBounds(565, 64, 170, 60);
+		backgroundPanel.add(button_6);
+		
+		JButton button_7 = new JButton(new ImageIcon("star.jpg"));
+		button_7.setBounds(770, 64, 170, 60);
+		backgroundPanel.add(button_7);
+		
+		JButton button_8 = new JButton(new ImageIcon("hotelButton.jpg"));
+		button_8.setBounds(975, 64, 170, 60);
+		backgroundPanel.add(button_8);
+		
+		JTextArea textArea_12 = new JTextArea();
+		textArea_12.setEditable(false);
+		textArea_12.setText("\u6392\u5E8F\u65B9\u5F0F");
+		textArea_12.setOpaque(false);
+		textArea_12.setMargin(new Insets(10, 10, 10, 10));
+		textArea_12.setForeground(Color.WHITE);
+		textArea_12.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		textArea_12.setColumns(10);
+		textArea_12.setBounds(360, 24, 99, 40);
+		backgroundPanel.add(textArea_12);
+		
+		textField_3 = new JTextField();
+		textField_3.setMargin(new Insets(0, 20, 0, 20));
+		textField_3.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		textField_3.setEditable(false);
+		textField_3.setColumns(10);
+		textField_3.setBackground(new Color(245, 255, 250));
+		textField_3.setBounds(71, 410, 170, 50);
+		backgroundPanel.add(textField_3);
+		
+		JLabel label_3 = new JLabel("\u5171--\u9875 \u7B2C--\u9875");
+		label_3.setFont(new Font("仿宋", Font.BOLD, 15));
+		label_3.setBounds(704, 716, 120, 29);
+		backgroundPanel.add(label_3);
+		
 	}
 }
 

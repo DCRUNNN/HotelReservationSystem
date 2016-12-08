@@ -1,6 +1,9 @@
-package presentation.clientUI_account;
+package presentation.clientUI_book;
+/*
+ * 可拖拽的客户订单预订——查看酒店
+ */
 
-import java.awt.event.MouseAdapter;  
+import java.awt.event.MouseAdapter; 
 import java.awt.event.MouseMotionListener;  
 import java.awt.Color;
 import java.awt.Component;  
@@ -8,20 +11,22 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;  
 import javax.swing.BorderFactory;  
 import javax.swing.JFrame;  
-import javax.swing.border.BevelBorder;  
+import javax.swing.border.BevelBorder;
+
+import presentation.clientUI_account.EasyMove_account;  
   
-public class EasyMove extends MouseAdapter implements MouseMotionListener {  
+public class EasyMove_book extends MouseAdapter implements MouseMotionListener {  
     private Point offset;  
     private Component host;  
   
     public static void main(String[] args) {  
-        JFrame frm = new client_account();  
+        JFrame frm = new bookUI();  
         frm.setBackground(Color.blue);
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
       
         frm.getRootPane().setBorder(  
                 BorderFactory.createBevelBorder(BevelBorder.RAISED));  
-        new EasyMove().install(frm);
+        new EasyMove_account().install(frm);
         frm.setVisible(true);  
     }  
   
