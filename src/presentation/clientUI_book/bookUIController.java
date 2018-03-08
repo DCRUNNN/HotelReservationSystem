@@ -276,4 +276,14 @@ public class bookUIController implements bookUIControllerService {
 		
 		return clientID;
 	}
+
+	@Override
+	public byte[] getHotelImage(String hotelID) {
+		
+		try {
+			return search.getHotelPicture(hotelID);
+		} catch (RemoteException e) {
+			return null;
+		}
+	}
 }

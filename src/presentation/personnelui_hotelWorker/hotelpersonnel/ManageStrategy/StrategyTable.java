@@ -10,7 +10,7 @@ public class StrategyTable extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String hotelID="1";
+	private String hotelID;
 	
 	String[] titleName={};
 	String[][] data;

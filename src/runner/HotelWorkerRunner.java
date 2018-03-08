@@ -6,18 +6,21 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import presentation.personnelui_hotelWorker.hotelpersonnel.ManageStrategy.InitManageStrategyView;
 import rmi.HotelWorkerRemoteHelper;
 import service.Strategy.ManageHotelStrategy.ManageHotelStrategyService;
 import vo.StrategyVO;
 
 public class HotelWorkerRunner {
 
-	private  HotelWorkerRemoteHelper remoteHelper;
+	private HotelWorkerRemoteHelper remoteHelper;
 	
 	public HotelWorkerRunner(){
 		
 		linkToServer();
+	
 	}
+
 
 	private void linkToServer() {
 		
@@ -38,7 +41,7 @@ public class HotelWorkerRunner {
 		
 		ManageHotelStrategyService service = remoteHelper.getManageHotelStrategyService();
 		try {
-			List<StrategyVO> volist = service.getAllHotelStrategy("00001");
+			List<StrategyVO> volist = service.getAllHotelStrategy("1");
 			for(StrategyVO vo:volist){
 				System.out.println(vo.getName());
 			}

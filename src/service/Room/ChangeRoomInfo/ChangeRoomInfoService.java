@@ -1,59 +1,68 @@
 package service.Room.ChangeRoomInfo;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
 import vo.RoomVO;
 
-public interface ChangeRoomInfoService {
+public interface ChangeRoomInfoService extends Remote{
 
 	/**
-	 * @return è¿”å›é…’åº—çš„æ‰€æœ‰æˆ¿é—´ä¿¡æ¯
+	 * @return ·µ»Ø¾ÆµêµÄËùÓĞ·¿¼äĞÅÏ¢
 	 */
-	public List<RoomVO> getAllRoomList();
+	public List<RoomVO> getAllRoomList(String hotelID) throws RemoteException;
 	
 	/**
-	 * @param roomId æˆ¿é—´å·ç 
-	 * @return è¿”å›æˆ¿é—´ä¿¡æ¯
+	 * @param roomId ·¿¼äºÅÂë
+	 * @return ·µ»Ø·¿¼äĞÅÏ¢
 	 * */
-	public RoomVO getRoomByNum(String roomId);
+	public RoomVO getRoomByNum(String hotelID,String roomId)throws RemoteException;
 	
 	/**
-	 * @param state æˆ¿é—´çŠ¶æ€
-	 * @return è¿”å›ç‰¹å®šçŠ¶æ€ä¸‹çš„æ‰€æœ‰æˆ¿é—´ä¿¡æ¯
+	 * @param state ·¿¼ä×´Ì¬
+	 * @return ·µ»ØÌØ¶¨×´Ì¬ÏÂµÄËùÓĞ·¿¼äĞÅÏ¢
 	 * */
-	public List<RoomVO> getRoomByState(String state);
+	public List<RoomVO> getRoomByState(String hotelID,String state)throws RemoteException;
 	
 	/**
-	 * @param type æˆ¿é—´ç±»å‹
-	 * @return è¿”å›è¯¥ç±»å‹çš„æ‰€æœ‰æˆ¿é—´ä¿¡æ¯
+	 * @param type ·¿¼äÀàĞÍ
+	 * @return ·µ»Ø¸ÃÀàĞÍµÄËùÓĞ·¿¼äĞÅÏ¢
 	 * */
-	public List<RoomVO> getRoomByType(String type);
+	public List<RoomVO> getRoomByType(String hotelID,String type)throws RemoteException;
 	
 	/**
-	 * @param type æˆ¿é—´ç±»å‹
-	 * @param price ä»·æ ¼
-	 * @param hotelId é…’åº—ç¼–å·
-	 * @return è¿”å›æ˜¯å¦ä¿®æ”¹æˆåŠŸ
+	 * @param type ·¿¼äÀàĞÍ
+	 * @param price ¼Û¸ñ
+	 * @param hotelId ¾Æµê±àºÅ
+	 * @return ·µ»ØÊÇ·ñĞŞ¸Ä³É¹¦
 	 * */
-	public boolean changeRoomPrice(String type,double price,String hotelId);
+	public boolean changeRoomPrice(String type,double price,String hotelId)throws RemoteException;
+	
+	public boolean changeRoomPriceById(String hotelId,double price,String roomNumber)throws RemoteException;
+	
+	public boolean changeRoomType(String hotelId,String roomNumber,String type)throws RemoteException;
+
+	/**
+	 * @param hotelId ¾Æµê±àºÅ
+	 * @param roomId ·¿¼ä±àºÅ
+	 * @param state ĞÂµÄ·¿¼ä×´Ì¬
+	 * @return ·µ»ØÊÇ·ñĞŞ¸Ä³É¹¦
+	 * */
+	public boolean changeRoomState(String hotelId,String roomId,String state)throws RemoteException;
+	
+	public boolean changeRoomIntroByType(String hotelId,String roomType,String intro)throws RemoteException;
+	
+	public boolean changeRoomIntroById(String hotelId,String roomNumber,String intro)throws RemoteException;
 	
 	/**
-	 * @param hotelId é…’åº—ç¼–å·
-	 * @param roomId æˆ¿é—´ç¼–å·
-	 * @param state æ–°çš„æˆ¿é—´çŠ¶æ€
-	 * @return è¿”å›æ˜¯å¦ä¿®æ”¹æˆåŠŸ
+	 * @param hotelId ¾Æµê±àºÅ
+	 * @param roomId ·¿¼äºÅÂë
+	 * @return ·µ»ØÊÇ·ñÉ¾³ı³É¹¦
 	 * */
-	public boolean changeRoomState(String hotelId,String roomId,String state);
+	public boolean deleteRoom(String hotelId,String roomId)throws RemoteException;
 	
-	/**
-	 * @param hotelId é…’åº—ç¼–å·
-	 * @param roomId æˆ¿é—´å·ç 
-	 * @return è¿”å›æ˜¯å¦åˆ é™¤æˆåŠŸ
-	 * */
-	public boolean deleteRoom(String hotelId,String roomId);
+    public List<String> getRoomType(String hotelId)throws RemoteException;
 	
-	public List<String> getRoomType(String hotelId);
-		
-	public List<String> getRoomState(String hotelId);
+	public List<String> getRoomState(String hotelId)throws RemoteException;
 }

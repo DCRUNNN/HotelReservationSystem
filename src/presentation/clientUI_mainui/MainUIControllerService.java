@@ -1,5 +1,7 @@
 package presentation.clientUI_mainui;
 
+import javax.swing.Icon;
+
 public interface MainUIControllerService {
 
 	public String getProvinces();
@@ -19,5 +21,19 @@ public interface MainUIControllerService {
 	public void searchButtonClicked();
 
 	public String getClientID();
+	
+    public void accountButtonClicked();
+	
+	public void orderButtonClicked();
+	
+	public void hotelButtonClicked();
+	
+	public void creditButtonClicked();
+	
+	public void memberButtonClicked();
+	
+	public void setView(mainUI view);//added;
+	
+	public Icon getHeadIcon();
 
 }

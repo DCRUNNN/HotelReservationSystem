@@ -1,18 +1,43 @@
 package presentation.clientUI_mainui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-
-import java.awt.EventQueue;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputListener;
 
 import presentation.clientUI_account.BackgroundPanel;
+import presentation.clientUI_account.CircleButton;
+import presentation.clientUI_account.CircleButton_min;
+import presentation.clientUI_account.ManageClientMessageUIController;
+import presentation.clientUI_account.MouseEventListener_all;
+import presentation.clientUI_account.accountUI;
 import presentation.clientUI_book.bookUI;
+import presentation.clientUI_credit.CheckPersonalCreditUIController;
+import presentation.clientUI_credit.creditUI;
+import presentation.clientUI_hotel.CheckHistoryHotelUIController;
+import presentation.clientUI_hotel.showAllHotelsUI;
+import presentation.clientUI_membership.ApplyforMemberUIController;
+import presentation.clientUI_membership.DateChooserJButton;
+import presentation.clientUI_membership.memberUI;
+import presentation.clientUI_membership.DateChooserJButton.DateChooser;
+import presentation.clientUI_order.ManagePersonalOrderUIController;
+import presentation.clientUI_order.showAllOrdersUI;
 import runner.ClientRunner;
 import vo.SearchVO;
 
@@ -21,6 +46,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,15 +57,24 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 
 public class mainUI extends JFrame
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private MainUIControllerService controller;
 	
@@ -76,6 +114,10 @@ public class mainUI extends JFrame
 	private String defaultHotelName = "(选填)酒店名称";
 	private String defaultRoomType = "(选填)房间类型";
 	private String defaultRoomAmount = "(选填)房间数目";
+	
+	private String clientID;
+	private JButton dateChooserBT;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -84,6 +126,7 @@ public class mainUI extends JFrame
 	{
 		
 		this.controller = controller;
+		clientID = controller.getClientID();
 		this.initial();
 	}
 	
@@ -109,35 +152,126 @@ public class mainUI extends JFrame
 		JPanel backgroundPanel = new BackgroundPanel(background3);
 		backgroundPanel.setBounds(0, 0, 1200, 800);
 		contentPane.add(backgroundPanel);
-		backgroundPanel.setLayout(null);				
+		backgroundPanel.setLayout(null);
+		
+		//最小化与关闭按钮
+		JLabel closeLabel = new JLabel("×");
+		closeLabel.setForeground(Color.WHITE);
+		closeLabel.setFont(new Font("宋体", Font.BOLD, 25));
+		closeLabel.setBounds(1153, 18, 26, 30);
+		backgroundPanel.add(closeLabel);
+		
+		JButton close = new CircleButton("");
+		close.setBackground(new Color(135, 206, 235));
+		close.setBounds(1146, 13, 40, 40);
+		backgroundPanel.add(close);		
+		close.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dispose();
+			}
+		});
+		
+		
+		JLabel minLabel=new JLabel("-");
+		minLabel.setForeground(Color.BLACK);
+		minLabel.setFont(new Font("宋体", Font.BOLD, 25));
+		minLabel.setBounds(1097, 18, 26, 30);
+		backgroundPanel.add(minLabel);
+		
+		JButton minBT=new CircleButton_min("");
+		minBT.setBackground(Color.WHITE);
+		minBT.setBounds(1083, 13, 40, 40);
+		minBT.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				setExtendedState(ICONIFIED);
+			}
+		});
+		backgroundPanel.add(minBT);
+		
+		//可自由拖拽的label
+		MouseEventListener_all mouseListener = new MouseEventListener_all(this);
+		
+		JLabel titleLbl = new JLabel();
+		titleLbl.setBounds(0, 0, 1075, 36);
+		backgroundPanel.add(titleLbl);
+		titleLbl.addMouseListener(mouseListener);
+		titleLbl.addMouseMotionListener(mouseListener);
+		
 		
 		//客户的头像
 		Image head = new ImageIcon("client.jpg").getImage();
 		
-		//账户信息button初始化
-		accountButton = new JButton(new ImageIcon("accountButton.jpg"));
+	    accountButton = new JButton(new ImageIcon("accountButton.jpg"));
 		accountButton.setBounds(70, 400, 170, 60);
-		contentPane.add(accountButton);
+		backgroundPanel.add(accountButton);
+		accountButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.accountButtonClicked();
+			}
+		});
 		
-		//我的订单button初始化
 		orderButton = new JButton(new ImageIcon("orderButton.jpg"));
 		orderButton.setBounds(70, 470, 170, 60);
-		contentPane.add(orderButton);
+		backgroundPanel.add(orderButton);
+		orderButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.orderButtonClicked();
+			}
+		});
 		
-		//我的酒店button初始化
 		hotelButton = new JButton(new ImageIcon("hotelButton.jpg"));
 		hotelButton.setBounds(70, 540, 170, 60);
-		contentPane.add(hotelButton);
+		backgroundPanel.add(hotelButton);
+		hotelButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.hotelButtonClicked();
+			}
+		});
 		
-		//信用记录button初始化
 		creditButton = new JButton(new ImageIcon("creditButton.jpg"));
 		creditButton.setBounds(70, 610, 170, 60);
-		contentPane.add(creditButton);
+		backgroundPanel.add(creditButton);
+		creditButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.creditButtonClicked();
+			}
+		});
 		
-		//会员信息button初始化
-		memberButton = new JButton(new ImageIcon("memberButton.jpg"));
+	    memberButton = new JButton(new ImageIcon("memberButton.jpg"));
 		memberButton.setBounds(70, 680, 170, 60);
-		contentPane.add(memberButton);
+		backgroundPanel.add(memberButton);
+		memberButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				controller.memberButtonClicked();
+			}
+		});
 		
 		//搜索button初始化
 		searchButton = new JButton(new ImageIcon("search.jpg"));
@@ -225,10 +359,19 @@ public class mainUI extends JFrame
 		backgroundPanel.add(textField_2);
 		
 		//背景图片初始化
+		/*
 		JPanel headPanel = new BackgroundPanel(head);
 		headPanel.setBounds(71, 90, 170, 170);
 		backgroundPanel.add(headPanel);
 		headPanel.setBorder(null);
+		*/
+		JLabel headPicture = new JLabel();
+		headPicture.setBorder(BorderFactory.createEtchedBorder());
+		headPicture.setBounds(71, 90, 170, 170);
+		
+		Icon icon = controller.getHeadIcon();
+		headPicture.setIcon(icon);
+		backgroundPanel.add(headPicture);
 		
 		//欢迎label初始化 
 		initWelcomeStr();
@@ -236,9 +379,10 @@ public class mainUI extends JFrame
 		welcomeLabel.setBounds(71, 270, 170, 60);
 		backgroundPanel.add(welcomeLabel);
 		welcomeLabel.setForeground(Color.WHITE);
-		welcomeLabel.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 26));
+		welcomeLabel.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 18));
 		
 		//待输入的textfield 入住日期
+		/*
 		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());//得到当前的日期
 		checkInDate = new JTextField();
 		checkInDate.setText(currentDate);
@@ -257,6 +401,14 @@ public class mainUI extends JFrame
 		checkInDate.setMargin(new Insets(0, 60, 0, 20));
 		
 		backgroundPanel.add(checkInDate);
+		*/
+		
+		dateChooserBT = new DateChooserJButton();
+		dateChooserBT.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		dateChooserBT.setBackground(Color.WHITE);
+		dateChooserBT.setBounds(600, 290, 280, 50);
+		backgroundPanel.add(dateChooserBT);
+		
 		
 		//待输入的textfield 酒店名称
 		txtHotelName = new JTextField();
@@ -381,6 +533,10 @@ public class mainUI extends JFrame
 		comboBox_hotelGrade.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
 		comboBox_hotelGrade.setBounds(600, 370, 280, 50);
 		backgroundPanel.add(comboBox_hotelGrade);
+		
+		JButton button = new JButton(new ImageIcon("returnMainUI.jpg"));
+		button.setBounds(70, 330, 170, 60);
+		backgroundPanel.add(button);
 			
 	}
 
@@ -545,7 +701,9 @@ public class mainUI extends JFrame
 		    return;
 		}
 		
-		String date = checkInDate.getText();
+		//String date = checkInDate.getText();
+		String date = dateChooserBT.getText();
+		
 		if(!checkDate(date)){
 			//对输入的日期进行格式检查
 			JOptionPane.showMessageDialog(null, "请输入符合格式的日期!","不好意思",JOptionPane.INFORMATION_MESSAGE);
@@ -599,6 +757,55 @@ public class mainUI extends JFrame
 	    ui.setVisible(true);
 	    this.dispose();
 	}
+	public void accountButtonClicked()
+	{
+		ManageClientMessageUIController manageClientMessageUIController = new ManageClientMessageUIController(clientID);
+		accountUI accountView = new accountUI(manageClientMessageUIController);
+		manageClientMessageUIController.setView(accountView);
+		this.dispose();
+	}
+	
+	public void orderButtonClicked()
+	{
+		ManagePersonalOrderUIController managePersonalOrderUIController = new ManagePersonalOrderUIController(clientID);
+		showAllOrdersUI orderView = new showAllOrdersUI(managePersonalOrderUIController);
+		managePersonalOrderUIController.setView(orderView);
+		this.dispose();
+	}
+	
+	public void hotelButtonClicked()
+	{
+		CheckHistoryHotelUIController checkHistoryHotelUIController = new CheckHistoryHotelUIController(clientID);
+		showAllHotelsUI hotelView = new showAllHotelsUI(checkHistoryHotelUIController);
+		checkHistoryHotelUIController.setView(hotelView);
+		this.dispose();
+	}
+	
+	public void memberButtonClicked()
+	{
+		ApplyforMemberUIController applyforMemberUIController = new ApplyforMemberUIController(clientID);
+		memberUI memberView = new memberUI(applyforMemberUIController);
+		applyforMemberUIController.setView(memberView);
+		this.dispose();
+	}
+	
+	public void creditButtonClicked()
+	{
+		CheckPersonalCreditUIController checkPersonalCreditUIController =new CheckPersonalCreditUIController(clientID);
+		creditUI creditView = new creditUI(checkPersonalCreditUIController);
+		checkPersonalCreditUIController.setView(creditView);
+		this.dispose();
+	}
+
 }
+
+
+
+
+
+
+
+
+
 
 

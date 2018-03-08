@@ -8,7 +8,6 @@ package presentation.clientUI_book;
 
 import java.awt.Color;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
@@ -18,7 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import presentation.clientUI_account.BackgroundPanel;
+import presentation.clientUI_account.CircleButton;
+import presentation.clientUI_account.CircleButton_min;
+import presentation.clientUI_account.MouseEventListener_all;
+import presentation.help.HotelPicture;
 import vo.HotelVO;
+import vo.OrderVO;
 import vo.SearchVO;
 
 import javax.swing.ImageIcon;
@@ -32,6 +36,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -76,9 +81,12 @@ public class hotelDetailUI extends JFrame
 	private String defaultRoomAmount = "( 选填 ) 房间数目";
 	private JTextArea txtRoomType;
 	private JTextArea txtRoomAmount;
-	private JComboBox comboBox_hotelGrade;
+	private JComboBox<String> comboBox_hotelGrade;
 	
 	private HotelVO vo;
+	private String clientID;
+	
+	private hotelDetailUIControllerService controller;
 	/**
 	 * Create the frame.
 	 * @param clientID 
@@ -86,7 +94,11 @@ public class hotelDetailUI extends JFrame
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public hotelDetailUI(HotelVO vo, String clientID)
 	{
+		
+		controller = new hotelDetailUIController(vo.getHotelID(),clientID);
+		controller.setUI(hotelDetailUI.this);
 		this.vo = vo;
+		this.clientID = clientID;
 		comments = vo.getCommentList().split("%");
 		//设置JFrame
 		setUndecorated(true);
@@ -107,6 +119,56 @@ public class hotelDetailUI extends JFrame
 		backgroundPanel.setBounds(0, 0, 1200, 800);
 		contentPane.add(backgroundPanel);
 		backgroundPanel.setLayout(null);
+		
+		//最小化与关闭按钮
+		JLabel closeLabel = new JLabel("×");
+		closeLabel.setForeground(Color.WHITE);
+		closeLabel.setFont(new Font("宋体", Font.BOLD, 25));
+		closeLabel.setBounds(1153, 18, 26, 30);
+		backgroundPanel.add(closeLabel);
+		
+		JButton close = new CircleButton("");
+		close.setBackground(new Color(135, 206, 235));
+		close.setBounds(1146, 13, 40, 40);
+		backgroundPanel.add(close);		
+		close.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dispose();
+			}
+		});
+		
+		
+		JLabel minLabel=new JLabel("-");
+		minLabel.setForeground(Color.BLACK);
+		minLabel.setFont(new Font("宋体", Font.BOLD, 25));
+		minLabel.setBounds(1097, 18, 26, 30);
+		backgroundPanel.add(minLabel);
+		
+		JButton minBT=new CircleButton_min("");
+		minBT.setBackground(Color.WHITE);
+		minBT.setBounds(1083, 13, 40, 40);
+		minBT.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				setExtendedState(ICONIFIED);
+			}
+		});
+		backgroundPanel.add(minBT);
+		
+		//可自由拖拽的label
+		MouseEventListener_all mouseListener = new MouseEventListener_all(this);
+		
+		JLabel titleLbl = new JLabel();
+		titleLbl.setBounds(0, 0, 1075, 36);
+		backgroundPanel.add(titleLbl);
+		titleLbl.addMouseListener(mouseListener);
+		titleLbl.addMouseMotionListener(mouseListener);
 		
 		JLabel accountLabel = new JLabel("\u641C\u7D22\u6761\u4EF6");
 		accountLabel.setForeground(Color.WHITE);
@@ -154,7 +216,7 @@ public class hotelDetailUI extends JFrame
 		destination = new JTextField();
 		destination.setEditable(false);
 		destination.setBackground(new Color(245, 255, 250));
-		destination.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		destination.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 16));
 		destination.setColumns(10);
 		destination.setBounds(71, 210, 170, 50);
 		destination.setMargin(new Insets(0, 20, 0, 20));
@@ -271,6 +333,15 @@ public class hotelDetailUI extends JFrame
 		
 		//显示的酒店图片
 		Image hotel = new ImageIcon("hotel.jpg").getImage();
+		String hotelID = vo.getHotelID();
+		if(HotelPicture.isExist(hotelID)){
+			hotel = new ImageIcon(HotelPicture.getLocalPicture(hotelID)).getImage();
+		}else{
+			byte[] b = controller.getPicture(hotelID);
+			if(b!=null){
+				hotel = new ImageIcon(HotelPicture.changeByteAndSave(b, hotelID)).getImage();
+			}
+		}
 		
 		BackgroundPanel hotelPicturePanel = new BackgroundPanel(hotel);
 		hotelPicturePanel.setBounds(435, 77, 350, 150);
@@ -383,40 +454,40 @@ public class hotelDetailUI extends JFrame
 		
 		//需要设置的商圈
 		txtCBD = new JTextField();
-		txtCBD.setBackground(new Color(245, 255, 250));
+		txtCBD.setBackground(Color.WHITE);
 		txtCBD.setEditable(false);
-		txtCBD.setMargin(new Insets(0, 20, 0, 0));
-		txtCBD.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		txtCBD.setMargin(new Insets(0, 20, 0, 20));
+		txtCBD.setFont(new Font("微软雅黑 Light", Font.BOLD, 20));
 		txtCBD.setColumns(10);
 		txtCBD.setBounds(905, 177, 195, 50);
 		txtCBD.setText(vo.getHotelCBD());
 		backgroundPanel.add(txtCBD);
 		
 		txtStar = new JTextField();
-		txtStar.setBackground(new Color(245, 255, 250));
+		txtStar.setBackground(Color.WHITE);
 		txtStar.setEditable(false);
-		txtStar.setMargin(new Insets(0, 20, 0, 0));
-		txtStar.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		txtStar.setMargin(new Insets(0, 20, 0, 20));
+		txtStar.setFont(new Font("微软雅黑 Light", Font.BOLD, 20));
 		txtStar.setColumns(10);
 		txtStar.setBounds(905, 127, 195, 50);
 		txtStar.setText(vo.getHotelStar()+"星级");
 		backgroundPanel.add(txtStar);
 		
 		txtFacility = new JTextField();
-		txtFacility.setBackground(new Color(245, 255, 250));
+		txtFacility.setBackground(Color.WHITE);
 		txtFacility.setEditable(false);
-		txtFacility.setMargin(new Insets(0, 20, 0, 0));
-		txtFacility.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		txtFacility.setMargin(new Insets(0, 20, 0, 20));
+		txtFacility.setFont(new Font("微软雅黑 Light", Font.BOLD, 20));
 		txtFacility.setColumns(10);
 		txtFacility.setBounds(555, 277, 545, 50);
 		txtFacility.setText(vo.getFacilities());
 		backgroundPanel.add(txtFacility);
 		
 		txtScore = new JTextField();
-		txtScore.setBackground(new Color(245, 255, 250));
+		txtScore.setBackground(Color.WHITE);
 		txtScore.setEditable(false);
-		txtScore.setMargin(new Insets(0, 20, 0, 0));
-		txtScore.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		txtScore.setMargin(new Insets(0, 20, 0, 20));
+		txtScore.setFont(new Font("微软雅黑 Light", Font.BOLD, 20));
 		txtScore.setColumns(10);
 		txtScore.setBounds(905, 77, 195, 50);
 		double d = (vo.getPoint_facilities()+vo.getPoint_service()+vo.getPoint_surroundings())/3;
@@ -424,10 +495,10 @@ public class hotelDetailUI extends JFrame
 		backgroundPanel.add(txtScore);
 		
 		txtAddress = new JTextField();
-		txtAddress.setBackground(new Color(245, 255, 250));
+		txtAddress.setBackground(Color.WHITE);
 		txtAddress.setEditable(false);
-		txtAddress.setMargin(new Insets(0, 20, 0, 0));
-		txtAddress.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		txtAddress.setMargin(new Insets(0, 20, 0, 20));
+		txtAddress.setFont(new Font("微软雅黑 Light", Font.BOLD, 20));
 		txtAddress.setColumns(10);
 		txtAddress.setBounds(555, 227, 545, 50);
 		txtAddress.setText(vo.getHotelAddress());
@@ -450,8 +521,8 @@ public class hotelDetailUI extends JFrame
 		
 		//酒店的简介
 		JTextArea txtIntroduction = new JTextArea();
-		txtIntroduction.setBackground(new Color(245, 255, 250));
-		txtIntroduction.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		txtIntroduction.setBackground(Color.WHITE);
+		txtIntroduction.setFont(new Font("微软雅黑 Light", Font.BOLD, 20));
 		txtIntroduction.setLineWrap(true);
 		txtIntroduction.setEditable(false);
 		txtIntroduction.setMargin(new Insets(20, 30, 20, 30));
@@ -460,7 +531,9 @@ public class hotelDetailUI extends JFrame
 		backgroundPanel.add(txtIntroduction);
 		
 		Image background5 = new ImageIcon("background7.jpg").getImage();
-		JPanel panel = new BackgroundPanel(background5);
+		//JPanel panel = new BackgroundPanel(background5);
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
 		panel.setBackground(new Color(240, 255, 240));
 		panel.setBounds(555, 477, 545, 220);
 		backgroundPanel.add(panel);
@@ -528,6 +601,20 @@ public class hotelDetailUI extends JFrame
 		//查看历史订单的按钮
 		historyButton = new JButton(new ImageIcon("history.jpg"));
 		historyButton.setBounds(977, 710, 170, 60);
+		historyButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			    List<OrderVO> orders = controller.getHistoryOrders();
+			    HistoryOrderUI ui = new HistoryOrderUI(orders,vo);
+			    ui.setLastView(hotelDetailUI.this);
+			    ui.setVisible(true);
+			    hotelDetailUI.this.dispose();
+			    
+			}
+			
+		});
 		backgroundPanel.add(historyButton);
 		
 		Color defaultcolor = new Color(192,192,192);
@@ -620,7 +707,7 @@ public class hotelDetailUI extends JFrame
 	
 	protected void bookButtonClicked() {
 		
-		bookDetailUI ui = new bookDetailUI(vo);
+		bookDetailUI ui = new bookDetailUI(vo,clientID);
 		ui.setBookUI(lastUI);
 		ui.setVisible(true);
 		this.dispose();

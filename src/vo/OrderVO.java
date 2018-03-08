@@ -19,6 +19,7 @@ import po.OrderPO;
  * hasChild           有无儿童
  * orderStatus        订单状态
  * withdrawTime       订单撤销时间
+ * checkOutTotal      退房数目
  * hotelID            酒店编号
  * hotelProvince      酒店省份
  * hotelCity          酒店市
@@ -64,12 +65,15 @@ public class OrderVO implements Serializable{
 	private String sex;
 	private String identityID;
 	private String phoneNumber;
+	private double credit;
+	private String vipInfo;
+	private int checkOutTotal;
 	
 	/**
 	 * 传递OrderPO，酒店省份，酒店市，酒店商圈，酒店详细地址，酒店名称，
-	 * 姓名，性别，身份证号，手机号码
+	 * 姓名，性别，身份证号，手机号码,vip信息,信用值
 	 * */
-	public OrderVO(OrderPO po,String hotelProvince,String hotelCity,String hotelCBD,String hotelAddress,String hotelName,String clientName,String sex,String identityID,String phoneNumber){
+	public OrderVO(OrderPO po,String hotelProvince,String hotelCity,String hotelCBD,String hotelAddress,String hotelName,String clientName,String sex,String identityID,String phoneNumber,double credit,String vipInfo){
 		
 		this.orderID = po.getOrderID();
 		this.clientID = po.getClientID();
@@ -85,6 +89,8 @@ public class OrderVO implements Serializable{
 		this.hasChild = po.getHasChild();
 		this.orderStatus = po.getOrderStatus();
 		this.withdrawTime = po.getWithdrawTime();
+		this.checkOutTotal = po.getCheckOutTotal();
+		
 		this.comment = po.getComment();
 		this.hotelID = po.getHotelID();
 		this.hotelProvince = hotelProvince;
@@ -97,6 +103,9 @@ public class OrderVO implements Serializable{
 		this.sex = sex;
 		this.identityID = identityID;
 		this.phoneNumber = phoneNumber;
+		this.credit=credit;
+		this.vipInfo=vipInfo;
+		
 	}
 	
 	
@@ -192,5 +201,15 @@ public class OrderVO implements Serializable{
 		return phoneNumber;
 	}
 	
+	public int getCheckOutTotal(){
+		return checkOutTotal;
+	}
 	
+	public String getVipInfo(){
+		return vipInfo;
+	}
+	
+	public double getCredit(){
+		return credit;
+	}
 }

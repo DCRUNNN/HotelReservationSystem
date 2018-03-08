@@ -18,8 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import presentation.clientUI_account.BackgroundPanel;
+import presentation.clientUI_account.CircleButton;
+import presentation.clientUI_account.CircleButton_min;
+import presentation.clientUI_account.MouseEventListener_all;
 import presentation.clientUI_mainui.MainUIController;
 import presentation.clientUI_mainui.mainUI;
+import presentation.help.HotelPicture;
 import vo.HotelVO;
 import vo.SearchVO;
 
@@ -133,6 +137,56 @@ public class bookUI extends JFrame
 		backgroundPanel.setBounds(0, 0, 1200, 800);
 		contentPane.add(backgroundPanel);
 		backgroundPanel.setLayout(null);
+		
+		//最小化与关闭按钮
+		JLabel closeLabel = new JLabel("×");
+		closeLabel.setForeground(Color.WHITE);
+		closeLabel.setFont(new Font("宋体", Font.BOLD, 25));
+		closeLabel.setBounds(1153, 18, 26, 30);
+		backgroundPanel.add(closeLabel);
+		
+		JButton close = new CircleButton("");
+		close.setBackground(new Color(135, 206, 235));
+		close.setBounds(1146, 13, 40, 40);
+		backgroundPanel.add(close);		
+		close.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dispose();
+			}
+		});
+		
+		
+		JLabel minLabel=new JLabel("-");
+		minLabel.setForeground(Color.BLACK);
+		minLabel.setFont(new Font("宋体", Font.BOLD, 25));
+		minLabel.setBounds(1097, 18, 26, 30);
+		backgroundPanel.add(minLabel);
+		
+		JButton minBT=new CircleButton_min("");
+		minBT.setBackground(Color.WHITE);
+		minBT.setBounds(1083, 13, 40, 40);
+		minBT.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				setExtendedState(ICONIFIED);
+			}
+		});
+		backgroundPanel.add(minBT);
+		
+		//可自由拖拽的label
+		MouseEventListener_all mouseListener = new MouseEventListener_all(this);
+		
+		JLabel titleLbl = new JLabel();
+		titleLbl.setBounds(0, 0, 1075, 36);
+		backgroundPanel.add(titleLbl);
+		titleLbl.addMouseListener(mouseListener);
+		titleLbl.addMouseMotionListener(mouseListener);
 		
 		//查看详情按钮的初始化
 		detailButton_1 = new JButton(new ImageIcon("view.jpg"));
@@ -490,15 +544,35 @@ public class bookUI extends JFrame
 	 * */
 	private void initThreeHotelPanel(List<HotelVO> threeHotels) {
 		
+		HotelVO vo = new HotelVO("", "", "", "", "", 1, "", "", "单人间|20","","");
 		if(threeHotels.size()==1){
 			initPanel1(threeHotels.get(0));
+			initPanel2(vo);
+			panel_2.setVisible(false);
+			initPanel3(vo);
+			panel_3.setVisible(false);
 		}else if(threeHotels.size()==2){
 			initPanel1(threeHotels.get(0));
 			initPanel2(threeHotels.get(1));
+			initPanel3(vo);
+			panel_3.setVisible(false);
 		}else if(threeHotels.size()==3){
 			initPanel1(threeHotels.get(0));
 			initPanel2(threeHotels.get(1));
 			initPanel3(threeHotels.get(2));
+		}else if(threeHotels.size()==0){
+			if(panel_1==null){
+				initPanel1(vo);
+				panel_1.setVisible(false);
+			}
+			if(panel_2==null){
+				initPanel2(vo);
+				panel_2.setVisible(false);
+			}
+			if(panel_3==null){
+				initPanel3(vo);
+				panel_3.setVisible(false);
+			}
 		}
 	}
 
@@ -618,7 +692,26 @@ public class bookUI extends JFrame
 		double average_point = (hotelVO.getPoint_facilities()+hotelVO.getPoint_service()+hotelVO.getPoint_surroundings())/3;
 		
 		score_1.setText(formatPoint(average_point));
-		picture_1 = new BackgroundPanel(hotel);
+		
+		String hotelID = hotelVO.getHotelID();
+		if(HotelPicture.isExist(hotelID)){
+			//图片已经存在
+			Image i = HotelPicture.getLocalPicture(hotelID);
+			if(i!=null){
+				picture_1 = new BackgroundPanel(i);
+			}else{
+		         picture_1 = new BackgroundPanel(hotel);
+			}
+		}else{
+			byte[] b = controller.getHotelImage(hotelID);
+			if(b==null){
+				picture_1 = new BackgroundPanel(hotel);
+			}else{
+				Image i = HotelPicture.changeByteAndSave(b, hotelID);
+                picture_1 = new BackgroundPanel(i);
+			}
+		}
+		
 		picture_1.setBounds(14, 17, 120, 120);
 		panel_1.add(picture_1);		
 		
@@ -672,7 +765,24 @@ public class bookUI extends JFrame
 		score_2.setFont(new Font("方正兰亭超细黑简体", Font.BOLD | Font.ITALIC, 60));
 		
 		//第二个酒店的酒店图片
-		picture_2 = new BackgroundPanel(hotel);
+		String hotelID = hotelVO.getHotelID();
+		if(HotelPicture.isExist(hotelID)){
+			//图片已经存在
+			Image i = HotelPicture.getLocalPicture(hotelID);
+			if(i!=null){
+				picture_2 = new BackgroundPanel(i);
+			}else{
+		         picture_2 = new BackgroundPanel(hotel);
+			}
+		}else{
+			byte[] b = controller.getHotelImage(hotelID);
+			if(b==null){
+				picture_2 = new BackgroundPanel(hotel);
+			}else{
+				Image i = HotelPicture.changeByteAndSave(b, hotelID);
+                picture_2 = new BackgroundPanel(i);
+			}
+		}
 		picture_2.setBounds(14, 17, 120, 120);
 		panel_2.add(picture_2);
 		
@@ -846,7 +956,24 @@ public class bookUI extends JFrame
 		panel_3.add(star_3);
 		
 		//第三个酒店的图片
-		picture_3 = new BackgroundPanel(hotel);
+		String hotelID = hotelVO.getHotelID();
+		if(HotelPicture.isExist(hotelID)){
+			//图片已经存在
+			Image i = HotelPicture.getLocalPicture(hotelID);
+			if(i!=null){
+				picture_3 = new BackgroundPanel(i);
+			}else{
+		         picture_3 = new BackgroundPanel(hotel);
+			}
+		}else{
+			byte[] b = controller.getHotelImage(hotelID);
+			if(b==null){
+				picture_3 = new BackgroundPanel(hotel);
+			}else{
+				Image i = HotelPicture.changeByteAndSave(b, hotelID);
+                picture_3 = new BackgroundPanel(i);
+			}
+		}
 		picture_3.setBounds(14, 17, 120, 120);
 		panel_3.add(picture_3);
 		
@@ -882,12 +1009,12 @@ public class bookUI extends JFrame
 			changePanel1(threeHotels.get(0));
 			changePanel2(threeHotels.get(1));
 			changePanel3(threeHotels.get(2));
-		}else{
+		}/*else{
 			//酒店信息的数目为0
 			hidePanel1();
 			hidePanel2();
 			hidePanel3();
-		}
+		}*/
 	}
 
 	private void changePanel1(HotelVO hotelVO) {
@@ -901,7 +1028,7 @@ public class bookUI extends JFrame
 		txtHotelName_1.setText(hotelVO.getHotelName());
 		txtTel_1.setText(hotelVO.getTelephone());
 		txtAddress_1.setText(hotelVO.getHotelAddress());
-		//picture_1 这个更改图片的没有实现
+		
 		star_1.setText(hotelVO.getHotelStar()+"星级");
 		price_1.setText("￥"+findMin(hotelVO.getRoomTypeAndPrice())+"起");
 		double point = (hotelVO.getPoint_facilities()+hotelVO.getPoint_service()+hotelVO.getPoint_surroundings())/3;
@@ -916,6 +1043,33 @@ public class bookUI extends JFrame
 			}
 	    	
 	    });
+	    
+	    String hotelID = hotelVO.getHotelID();
+		//byte[] b = null;
+		if(HotelPicture.isExist(hotelID)){
+			//酒店图片已经存在
+			Image i = HotelPicture.getLocalPicture(hotelID);
+			panel_1.remove(picture_1);
+			picture_1 = new BackgroundPanel(i);
+			picture_1.setBounds(14, 17, 120, 120);
+			panel_1.add(picture_1);	
+		}else{
+			byte[] b = controller.getHotelImage(hotelID);
+			if(b==null){
+				//不存在图片的话，用默认的酒店图片
+				panel_1.remove(picture_1);
+				picture_1 = new BackgroundPanel(hotel);
+				picture_1.setBounds(14, 17, 120, 120);
+				panel_1.add(picture_1);	
+			}else{
+				Image i = HotelPicture.changeByteAndSave(b, hotelID);
+				panel_1.remove(picture_1);
+				picture_1 = new BackgroundPanel(i);
+				picture_1.setBounds(14, 17, 120, 120);
+				panel_1.add(picture_1);	
+			}
+		}
+		panel_1.repaint();
 	}
 
 	private void changePanel2(HotelVO hotelVO) {
@@ -944,6 +1098,33 @@ public class bookUI extends JFrame
 			}
 	    	
 	    });
+	    
+	    String hotelID = hotelVO.getHotelID();
+		//byte[] b = null;
+		if(HotelPicture.isExist(hotelID)){
+			//酒店图片已经存在
+			Image i = HotelPicture.getLocalPicture(hotelID);
+			panel_2.remove(picture_2);
+			picture_2 = new BackgroundPanel(i);
+			picture_2.setBounds(14, 17, 120, 120);
+			panel_2.add(picture_2);	
+		}else{
+			byte[] b = controller.getHotelImage(hotelID);
+			if(b==null){
+				//不存在图片的话，用默认的酒店图片
+				panel_2.remove(picture_2);
+				picture_2 = new BackgroundPanel(hotel);
+				picture_2.setBounds(14, 17, 120, 120);
+				panel_2.add(picture_2);	
+			}else{
+				Image i = HotelPicture.changeByteAndSave(b, hotelID);
+				panel_2.remove(picture_2);
+				picture_2 = new BackgroundPanel(i);
+				picture_2.setBounds(14, 17, 120, 120);
+				panel_2.add(picture_2);	
+			}
+		}
+		panel_2.repaint();
 	}
 
 	private void changePanel3(HotelVO hotelVO) {
@@ -957,7 +1138,7 @@ public class bookUI extends JFrame
 		txtHotelName_3.setText(hotelVO.getHotelName());
 		txtTel_3.setText(hotelVO.getTelephone());
 		txtAddress_3.setText(hotelVO.getHotelAddress());
-		//picture_1 这个更改图片的没有实现
+
 		star_3.setText(hotelVO.getHotelStar()+"星级");
 		price_3.setText("￥"+findMin(hotelVO.getRoomTypeAndPrice())+"起");
 		double point = (hotelVO.getPoint_facilities()+hotelVO.getPoint_service()+hotelVO.getPoint_surroundings())/3;
@@ -972,13 +1153,33 @@ public class bookUI extends JFrame
 			}
 	    	
 	    });
-	}
-
-	private void hidePanel1() {
-		
-		if(panel_1!=null){
-			panel_1.setVisible(false);
+	    
+	    String hotelID = hotelVO.getHotelID();
+		//byte[] b = null;
+		if(HotelPicture.isExist(hotelID)){
+			//酒店图片已经存在
+			Image i = HotelPicture.getLocalPicture(hotelID);
+			panel_3.remove(picture_3);
+			picture_3 = new BackgroundPanel(i);
+			picture_3.setBounds(14, 17, 120, 120);
+			panel_3.add(picture_3);	
+		}else{
+			byte[] b = controller.getHotelImage(hotelID);
+			if(b==null){
+				//不存在图片的话，用默认的酒店图片
+				panel_3.remove(picture_3);
+				picture_3 = new BackgroundPanel(hotel);
+				picture_3.setBounds(14, 17, 120, 120);
+				panel_3.add(picture_3);	
+			}else{
+				Image i = HotelPicture.changeByteAndSave(b, hotelID);
+				panel_3.remove(picture_3);
+				picture_3 = new BackgroundPanel(i);
+				picture_3.setBounds(14, 17, 120, 120);
+				panel_3.add(picture_3);	
+			}
 		}
+		panel_3.repaint();
 	}
 
 	private void hidePanel2() {
@@ -1004,9 +1205,19 @@ public class bookUI extends JFrame
 	 * */
 	private void initPageLabel(int currentPage, int allPage) {
 		
+		if(currentPage == 0)
+		{ 
+			currentPage = 1;
+		}
+		if(allPage == 0)
+		{
+			allPage = 1;
+		}
+		
+		
 		String page_before = "第"+currentPage+"页";
 		String page_behind = "总"+allPage+"页";
-		pageLabel = new JLabel(page_before+page_behind);
+		pageLabel = new JLabel(page_before+" "+page_behind);
 		pageLabel.setFont(new Font("仿宋", Font.BOLD, 15));
 		pageLabel.setBounds(704, 716, 120, 29);
 		backgroundPanel.add(pageLabel);	

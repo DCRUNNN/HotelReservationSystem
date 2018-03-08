@@ -17,7 +17,7 @@ package po;
  * commentList          酒店的评价列表(clientID+":"+comment+"|"+extraComment+"%"+clientID+":"+comment+"|"+extraComment)
  * commentPeople        对酒店进行评价的人数
  * company              合作企业的记录(company1+"/"+company2)
- * telephone            酒店联系方式
+ * telephone			酒店的联系方式
  * @author Xihao Zeng
  * */
 public class HotelPO {
@@ -56,14 +56,6 @@ public class HotelPO {
 	
 	private String telephone;
 	
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
 	public String getHotelAddress() {
 		return hotelAddress;
 	}
@@ -189,4 +181,13 @@ public class HotelPO {
 	public void setCompany(String company){
 		this.company = company;
 	}
+	
+	public String getTelephone(){
+		return telephone;
+	}
+	
+	public void setTelephone(String telephone){
+		this.telephone=telephone;
+	}
+	
 }

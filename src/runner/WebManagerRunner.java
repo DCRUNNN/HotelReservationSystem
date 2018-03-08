@@ -34,7 +34,7 @@ public class WebManagerRunner {
 
 	public static void main(String args[]){
 		
-		new HotelWorkerRunner();
+		new WebManagerRunner();
 	}
 
 

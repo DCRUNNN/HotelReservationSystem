@@ -29,4 +29,6 @@ public interface bookUIControllerService {
 
 	public String getClientID();
 
+	public byte[] getHotelImage(String hotelID);
+
 }

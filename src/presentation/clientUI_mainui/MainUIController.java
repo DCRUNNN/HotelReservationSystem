@@ -2,6 +2,10 @@ package presentation.clientUI_mainui;
 
 import java.rmi.RemoteException;
 
+import javax.swing.Icon;
+
+import presentation.clientUI_account.ManageClientMessageUIController;
+import presentation.clientUI_account.accountUI;
 import rmi.ClientRemoteHelper;
 import service.Hotel.SearchHotel.SearchHotelService;
 
@@ -95,6 +99,51 @@ public class MainUIController implements MainUIControllerService{
 	public String getClientID() {
 	
 		return clientID;
+	}
+
+	@Override
+	public void accountButtonClicked()
+	{
+		mainUI.accountButtonClicked();
+	}
+
+	@Override
+	public void orderButtonClicked()
+	{
+		mainUI.orderButtonClicked();
+	}
+
+	@Override
+	public void hotelButtonClicked()
+	{
+		mainUI.hotelButtonClicked();
+	}
+
+	@Override
+	public void creditButtonClicked()
+	{
+		mainUI.creditButtonClicked();
+	}
+
+	@Override
+	public void memberButtonClicked()
+	{
+		mainUI.memberButtonClicked();
+	}
+
+	@Override
+	public void setView(mainUI view)
+	{
+		mainUI = view;
+		view.setVisible(true);
+	}
+
+	@Override
+	public Icon getHeadIcon()
+	{
+		ManageClientMessageUIController manageClientMessageUIController = new ManageClientMessageUIController(clientID);
+		accountUI accountView = new accountUI(manageClientMessageUIController);
+		return accountView.getHeadIcon();
 	}
 
 }

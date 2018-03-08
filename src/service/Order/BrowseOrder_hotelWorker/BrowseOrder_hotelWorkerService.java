@@ -38,4 +38,5 @@ public interface BrowseOrder_hotelWorkerService extends Remote{
 	 * */
 	public List<OrderVO> getAbnormalOrders(String hotelID)throws RemoteException;
 	
+	public List<OrderVO> getAllOrders(String hotelID)throws RemoteException;
 }
